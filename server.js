@@ -1,13 +1,14 @@
 require('dotenv').config();
 require('module-alias/register');
-
+const boot = require('@service/boot');
+const mongoose = require('mongoose');
 const config = require('@config');
-const app = require('@app');
 
-app.listen(config.app.port, (err) => {
-  if (err) {
-    return console.log('erro');
-  }
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useCrateIndex', true);
 
-  console.log(`iniciou em http://localhost:${config.app.port}`);
-});
+if (config.db.connectionString) {
+  mongoose.connect(config.db.connectionString, boot);
+} else {
+  console.log('No connection string provided.');
+}
